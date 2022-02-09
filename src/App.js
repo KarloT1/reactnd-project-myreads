@@ -14,6 +14,12 @@ class BooksApp extends React.Component {
     }
   }
 
+  componentDidUpdate(prevProps, prevState) {
+    if (prevState.booksArray !== this.state.booksArray) {
+      this.fetchBooks()
+    }
+  }
+
   componentDidMount() {
     this.fetchBooks()
   }
@@ -27,11 +33,10 @@ class BooksApp extends React.Component {
   }
 
   render() {
-    console.log(this.state.booksArray)
     return (
       <div className="app">
-        <Route path="/search" render={() => <SearchBooks /> } />
-        <Route exact path="/" render={() => <HomePage />} />
+        <Route path="/search" render={() => <SearchBooks booksArray={this.state.booksArray} /> } />
+        <Route exact path="/" render={() => <HomePage booksArray={this.state.booksArray} />} />
       </div>
     )
   }
