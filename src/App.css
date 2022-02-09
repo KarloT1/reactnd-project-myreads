@@ -191,6 +191,11 @@ button:active {
   background: #eee;
 }
 
+.book-cover img {
+  width: 128px;
+  height: auto;
+}
+
 .book-cover-title {
   padding: 20px 10px 0;
   text-align: center;

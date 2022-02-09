@@ -6,7 +6,12 @@ import SearchBooks from './SearchBooks'
 import HomePage from './HomePage'
 
 class BooksApp extends React.Component {
-  state = {
+  constructor(props) {
+    super(props)
+  
+    this.state = {
+       booksArray: []
+    }
   }
 
   componentDidMount() {
@@ -14,10 +19,15 @@ class BooksApp extends React.Component {
   }
 
   fetchBooks() {
-    BooksAPI.getAll().then((books) => console.log(books))
+    BooksAPI.getAll().then((books) => {
+      this.setState({
+        booksArray: books
+      })
+    })
   }
 
   render() {
+    console.log(this.state.booksArray)
     return (
       <div className="app">
         <Route path="/search" render={() => <SearchBooks /> } />
