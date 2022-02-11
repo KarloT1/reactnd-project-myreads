@@ -7,14 +7,25 @@ class SearchBooks extends Component {
   constructor(props) {
     super(props)
     this.state = {
-      value: "",
       searched: []
     }
     this.handleChange = this.handleChange.bind(this);
   }
 
-  async handleChange(event) {
-    await BooksAPI.search(event.target.value).then((searched) => {
+  handleChange(event) {
+    BooksAPI.search(event.target.value).then((searched) => {
+      this.setShelves(searched);
+    })
+  }
+
+  setShelves(searched) {
+    const booksAdded = this.props.booksAdded;
+    searched.forEach((searchedBook) => {
+      booksAdded.forEach((bookAdded) => {
+        if (searchedBook.id === bookAdded.id) { // matching homepage books and searched books
+        searchedBook.shelf = bookAdded.shelf;
+        }
+      })
       this.setState({
         searched: searched
       })
@@ -27,8 +38,8 @@ class SearchBooks extends Component {
         <div className="search-books-bar">
           <Link to="/" className="close-search">Close</Link>
           <div className="search-books-input-wrapper">
-            <input 
-              type="text" 
+            <input
+              type="text"
               placeholder="Search by title or author"
               onChange={this.handleChange}
             />
@@ -38,7 +49,7 @@ class SearchBooks extends Component {
           <ol className="books-grid">
             {
               this.state.searched.map((book) => (
-                <Book 
+                <Book
                   imageLinks={book.imageLinks}
                   title={book.title}
                   authors={book.authors}

@@ -10,28 +10,30 @@ class HomePage extends Component {
     this._isMounted = false;
 
     this.state = {
-      booksAdded: [] 
+      booksAdded: []
     }
   }
 
   componentDidUpdate(prevProps, prevState) {
     if (prevState.booksAdded !== this.state.booksAdded) {
-      this.fetchAddedBooks()
+      this.fetchAddedBooks();
     }
   }
-  
+
   componentDidMount() {
     this._isMounted = true;
 
-    this.fetchAddedBooks()
+    this.fetchAddedBooks();
   }
 
   fetchAddedBooks() {
     BooksAPI.getAll().then(books => {
       if (this._isMounted) {
-        this.setState({ 
+        this.setState({
           booksAdded: books.filter((book) => book.shelf !== "none")
         })
+
+        this.props.booksAdded(this.state.booksAdded);
       }
     })
   }
@@ -58,7 +60,7 @@ class HomePage extends Component {
                 {this.state.booksAdded
                   .filter((book) => book.shelf === "currentlyReading")
                   .map((book) => (
-                    <Book 
+                    <Book
                       imageLinks={book.imageLinks}
                       title={book.title}
                       authors={book.authors}
@@ -78,8 +80,8 @@ class HomePage extends Component {
               <ol className="books-grid">
                 {this.state.booksAdded
                   .filter((book) => book.shelf === "wantToRead")
-                  .map((book, bookIndex) => (
-                    <Book 
+                  .map((book) => (
+                    <Book
                       imageLinks={book.imageLinks}
                       title={book.title}
                       authors={book.authors}
@@ -100,7 +102,7 @@ class HomePage extends Component {
                 {this.state.booksAdded
                   .filter((book) => book.shelf === "read")
                   .map((book) => (
-                    <Book 
+                    <Book
                       imageLinks={book.imageLinks}
                       title={book.title}
                       authors={book.authors}

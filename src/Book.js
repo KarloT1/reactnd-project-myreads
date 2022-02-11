@@ -5,19 +5,15 @@ class Book extends Component {
   constructor(props) {
     super(props)
 
-    this.state = {
-      value: ""
-    }
-
-    this.handleSelectChange = this.handleSelectChange.bind(this)
+    this.handleSelectChange = this.handleSelectChange.bind(this);
   }
 
-  async handleSelectChange(event) {
+  handleSelectChange(event) {
     const objectId = {
       id: this.props.id
     }
 
-    await BooksAPI.update(objectId, event.target.value)
+    BooksAPI.update(objectId, event.target.value);
   }
 
   render() {
