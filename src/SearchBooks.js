@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import { Link } from 'react-router-dom';
+import Book from './Book';
 import * as BooksAPI from './BooksAPI';
-import MoveBook from './moveBook';
 
 class SearchBooks extends Component {
   constructor(props) {
@@ -11,38 +11,17 @@ class SearchBooks extends Component {
       searched: []
     }
     this.handleChange = this.handleChange.bind(this);
-    this.handleSelectChange = this.handleSelectChange.bind(this);
   }
 
-  componentDidUpdate(prevProps, prevState) {
-    if (prevState.value !== this.state.value) {
-      this.fetchSearch()
-    }
-  }
-
-  fetchSearch() {
-    BooksAPI.search(this.state.value).then((searched) => {
+  async handleChange(event) {
+    await BooksAPI.search(event.target.value).then((searched) => {
       this.setState({
         searched: searched
       })
     })
   }
 
-  handleChange(event) {
-    this.setState({
-      value: event.target.value
-    })
-  }
-
-  handleSelectChange(event) {
-    const objectId = {
-      id: event.target.id
-    }
-    BooksAPI.update(objectId, event.target.value).then(data => console.log(data))
-  }
-
   render() {
-    console.log(this.state.searched)
     return (
       <div className="search-books">
         <div className="search-books-bar">
@@ -51,7 +30,6 @@ class SearchBooks extends Component {
             <input 
               type="text" 
               placeholder="Search by title or author"
-              value={this.state.value}
               onChange={this.handleChange}
             />
           </div>
@@ -59,25 +37,15 @@ class SearchBooks extends Component {
         <div className="search-books-results">
           <ol className="books-grid">
             {
-              this.state.searched.map((book, index) => (
-                <li key={index}>
-                  <div className="book">
-                    <div className="book-top">
-                      <div className="book-cover">
-                        <img src={`${book.imageLinks && book.imageLinks.thumbnail}`} alt="Book cover"/>
-                      </div>
-                      <MoveBook id={book.id} defaultValue={book.shelf} />
-                    </div>
-                    <div className="book-title">{book.title}</div>
-                    <div className="book-authors">
-                      {
-                        book.authors && book.authors.map((author, authorIndex) => (
-                          <p key={authorIndex}>{author}</p>
-                        ))
-                      }
-                    </div>
-                  </div>
-                </li>
+              this.state.searched.map((book) => (
+                <Book 
+                  imageLinks={book.imageLinks}
+                  title={book.title}
+                  authors={book.authors}
+                  id={book.id}
+                  key={book.id}
+                  shelf={book.shelf}
+                />
               ))
             }
           </ol>
