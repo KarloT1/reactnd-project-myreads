@@ -13,9 +13,17 @@ class SearchBooks extends Component {
   }
 
   handleChange(event) {
-    BooksAPI.search(event.target.value).then((searched) => {
-      this.setShelves(searched);
-    })
+    if (event.target.value === "") {
+      this.setShelves([])
+    } else {
+      BooksAPI.search(event.target.value).then((searched) => {
+        if (searched && searched.error) {
+          this.setShelves([])
+        } else {
+          this.setShelves(searched);
+        }
+      })
+    }
   }
 
   setShelves(searched) {
