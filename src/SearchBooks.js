@@ -7,23 +7,18 @@ class SearchBooks extends Component {
   constructor(props) {
     super(props)
     this.state = {
-      searched: [],
-      query: ""
+      searched: []
     }
     this.handleChange = this.handleChange.bind(this);
   }
 
   handleChange(event) {
-    this.setState({
-      query: event.target.value
-    })
-
-    if (this.state.query === "") {
+    if (event.target.value === "") {
       this.setState({
         searched: []
       })
     } else {
-      BooksAPI.search(this.state.query).then((searched) => {
+      BooksAPI.search(event.target.value).then((searched) => {
         if (searched && searched.error) {
           this.setState({
             searched: []
@@ -50,7 +45,7 @@ class SearchBooks extends Component {
   }
 
   render() {
-    const { searched, query } = this.state;
+    const { searched } = this.state;
 
     return (
       <div className="search-books">
@@ -61,8 +56,6 @@ class SearchBooks extends Component {
               type="text"
               placeholder="Search by title or author"
               onChange={this.handleChange}
-              value={query}
-              name="query"
             />
           </div>
         </div>
