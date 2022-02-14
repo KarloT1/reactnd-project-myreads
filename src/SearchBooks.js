@@ -7,18 +7,27 @@ class SearchBooks extends Component {
   constructor(props) {
     super(props)
     this.state = {
-      searched: []
+      searched: [],
+      query: ""
     }
     this.handleChange = this.handleChange.bind(this);
   }
 
   handleChange(event) {
-    if (event.target.value === "") {
-      this.setShelves([])
+    this.setState({
+      query: event.target.value
+    })
+
+    if (this.state.query === "") {
+      this.setState({
+        searched: []
+      })
     } else {
-      BooksAPI.search(event.target.value).then((searched) => {
+      BooksAPI.search(this.state.query).then((searched) => {
         if (searched && searched.error) {
-          this.setShelves([])
+          this.setState({
+            searched: []
+          })
         } else {
           this.setShelves(searched);
         }
@@ -41,6 +50,8 @@ class SearchBooks extends Component {
   }
 
   render() {
+    const { searched, query } = this.state;
+
     return (
       <div className="search-books">
         <div className="search-books-bar">
@@ -50,13 +61,15 @@ class SearchBooks extends Component {
               type="text"
               placeholder="Search by title or author"
               onChange={this.handleChange}
+              value={query}
+              name="query"
             />
           </div>
         </div>
         <div className="search-books-results">
           <ol className="books-grid">
             {
-              this.state.searched.map((book) => (
+              searched.map((book) => (
                 <Book
                   imageLinks={book.imageLinks}
                   title={book.title}
